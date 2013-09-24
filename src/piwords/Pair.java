@@ -74,7 +74,8 @@ public class Pair<X extends Comparable<X>, Y extends Comparable<Y>>
      */
     @Override
     public int compareTo(Pair<X ,Y> otherPair) {
-        // TODO Implement (Problem 6.b). 
-        throw new RuntimeException("Not Implemented");
+        int first = this.first.compareTo(otherPair.first);
+        int second = this.second.compareTo(otherPair.second);
+        return first == 0 ? second : first;
     }
 }

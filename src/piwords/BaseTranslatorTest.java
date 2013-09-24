@@ -59,7 +59,4 @@ public class BaseTranslatorTest {
         }
         return noTrailingZeroes;
     }
-    
-    public static void main(String args[]){
-    }
 }
