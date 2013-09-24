@@ -11,8 +11,11 @@ public class PiGenerator {
      *         decimal point) in hexadecimal.
      */
     public static int[] computePiInHex(int precision) {
-        // TODO: Implement (Problem 1.d)
-        throw new RuntimeException("not implemented");
+        int[] result = new int[precision];
+        for(int i = 0; i < precision; i++){
+            result[i] = piDigit(i+1); // first digit after the decimal is 1
+        }
+        return result;
     }
 
     /**
@@ -29,8 +32,22 @@ public class PiGenerator {
      * @return a^b mod m
      */
     public static int powerMod(int a, int b, int m) {
-        // TODO: Implement (Problem 1.b)
-        throw new RuntimeException("not implemented");
+//        int base = a;
+//        int exponent = b;
+//        int result = 1;
+//        while(exponent > 0){
+//            if(exponent % 2 == 1){
+//                result = (result * base) % m;
+//            }
+//            base = (base ^ 2) % 2;
+//            exponent /= 2;
+//        }
+//        return result;
+        long result = 1;
+        for(int i = 0; i < b; i++){
+            result = (result * a) % m;
+        }
+        return (int) result;
     }
     
     /**
