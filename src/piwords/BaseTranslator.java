@@ -32,7 +32,20 @@ public class BaseTranslator {
      */
     public static int[] convertBase(int[] digits, int baseA,
                                     int baseB, int precisionB) throws IllegalArgumentException{
-        // TODO: Implement (Problem 2.b)
-        throw new RuntimeException("not implemented");
+        
+        int[] workingDigits = new int[digits.length];
+        int [] result = new int[precisionB];
+        System.arraycopy(digits, 0, workingDigits, 0, digits.length);
+        int carry = 0;
+        for(int j = 0; j < precisionB; j++){
+            for(int i = workingDigits.length - 1; i >= 0; i--){
+                int x = (baseB * workingDigits[i]) + carry;
+                workingDigits[i] = x % baseA;
+                carry = x / baseA;
+            }
+            result[j] = carry;
+            carry = 0;
+        }
+        return result;
     }
 }

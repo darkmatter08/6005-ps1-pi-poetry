@@ -31,18 +31,7 @@ public class BaseTranslatorTest {
         // length of digits varies
         int[] emptyArray = {};
         assertArrayEquals(emptyArray, BaseTranslator.convertBase(emptyArray, 3, 3, 0));
-        final int MAX_ARRAY_LENGTH = Integer.MAX_VALUE - 8;
-        int[] maxLengthArray = generateRandomIntegerArray(MAX_ARRAY_LENGTH, 10);
         
-    }
-    
-    private int[] generateRandomIntegerArray(int arraySize, int base){
-        int[] answer = new int[arraySize];
-        Random random = new Random();
-        for(int i = 0; i < arraySize; i++){
-            answer[i] = random.nextInt(base);
-        }
-        return answer;
     }
     
     /**
