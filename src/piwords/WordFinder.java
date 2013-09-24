@@ -1,5 +1,6 @@
 package piwords;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class WordFinder {
@@ -25,7 +26,23 @@ public class WordFinder {
      */
     public static Map<String, Integer> findWords(String haystack,
                                                  String[] needles) { 
-        // TODO: Implement (Problem 4.b)
-        throw new RuntimeException("not implemented");
+        Map<String, Integer> result = new HashMap<String, Integer>();
+        for(int i = 0; i < haystack.length(); i++){
+            for(String needle : needles){
+                int endIndex = i + needle.length();
+                // endIndex cannot be past end of string and if substring is equal to the needle
+                if(endIndex <= haystack.length() && 
+                        haystack.substring(i, endIndex).equals(needle)){
+                    if(!result.containsKey(needle))
+                        result.put(needle, i);
+                }
+            }
+        }
+        return result;
+    }
+    
+    public static void main(String[] args){
+        String s = "abcde";
+        System.out.println(s.substring(1, s.length()));
     }
 }

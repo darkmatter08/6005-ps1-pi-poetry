@@ -1,5 +1,7 @@
 package piwords;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class AlphabetGenerator {
@@ -28,7 +30,18 @@ public class AlphabetGenerator {
      *         according to its requested frequency.
      */    
     public static char[] generateAlphabet(List<Pair<Character, Integer>> frequencies){
-        // TODO: Implement (Problem 5.b)
-        throw new RuntimeException("not implemented");
+        List<Character> result = new ArrayList<Character>();
+        for(Pair<Character, Integer> letter : frequencies){
+            for(int i = 0; i < letter.second; i++){
+                result.add(letter.first);
+            }
+        }
+        Collections.sort(result);
+        // Convert to char[]
+        char[] resultAsCharArr = new char[result.size()];
+        for(int i = 0; i < result.size(); i++){
+            resultAsCharArr[i] = result.get(i);
+        }
+        return resultAsCharArr;
     }
 }

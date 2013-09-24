@@ -1,5 +1,7 @@
 package piwords;
 
+import java.util.Map;
+
 public class DigitsToStringConverter {
     /**
      * Given a list of digits, a base, and a mapping of digits of that base to
@@ -23,7 +25,14 @@ public class DigitsToStringConverter {
      */
     public static String convertDigitsToString(int[] digits, int base,
                                                char[] alphabet) throws IllegalArgumentException {
-        // TODO: Implement (Problem 3.b)
-        throw new RuntimeException("not implemented");
+        String answer = "";
+        for(int i = 0; i < digits.length; i++){
+            int digitValue = digits[i];
+            if(digitValue < 0 || digitValue >= base){
+                throw new IllegalArgumentException("Invalid value in digits");
+            }
+            answer += alphabet[digitValue];
+        }
+        return answer;
     }
 }
