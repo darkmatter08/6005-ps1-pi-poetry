@@ -23,5 +23,26 @@ public class AlphabetGeneratorTest {
                 AlphabetGenerator.generateAlphabet(testInput));
     }
 
-    // TODO: Write more tests (Problem 5.a)
+    @Test
+    public void specialCharactersTest() {
+        List<Pair<Character, Integer>> testInput = 
+                new ArrayList<Pair<Character,Integer>>();
+        testInput.add(new Pair<Character, Integer>('/', 4));
+        testInput.add(new Pair<Character, Integer>('%', 4));
+        testInput.add(new Pair<Character, Integer>('|', 2));
+        testInput.add(new Pair<Character, Integer>('}', 2));
+        testInput.add(new Pair<Character, Integer>('{', 0));
+        testInput.add(new Pair<Character, Integer>('_', 50));
+        
+        char[] expectedOutput = 
+              { '%', '%', '%', '%', '/', '/', '/', '/', '_', '_', 
+                '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', 
+                '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', 
+                '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', 
+                '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', 
+                '_', '_', '_', '_', '_', '_', '_', '_', '|', '|', 
+                '}', '}' };
+        assertArrayEquals(expectedOutput,
+                AlphabetGenerator.generateAlphabet(testInput)); 
+    }
 }

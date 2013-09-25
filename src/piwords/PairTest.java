@@ -2,6 +2,9 @@ package piwords;
 
 import static org.junit.Assert.*;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import org.junit.Test;
 
 public class PairTest {
@@ -38,8 +41,21 @@ public class PairTest {
         assertTrue(pair1.compareTo(pair2) < 0);
     }
 
-    
-    // TODO: write more tests for compareTo (Problem 6.a)
-    
-
+    @Test
+    public void testCompareToSameObjs() {
+        // Compare objects based on reference and state
+        Calendar c1 = new GregorianCalendar(1111, 11, 11);
+        Calendar c2 = (Calendar) c1.clone();
+        Calendar c3 = new GregorianCalendar(2222, 22, 22);
+        Pair<Calendar, Integer> pair1 =  new Pair<Calendar, Integer>(c1, 11);
+        Pair<Calendar, Integer> pair2 =  new Pair<Calendar, Integer>(c2, 11);
+        Pair<Calendar, Integer> pair3 =  new Pair<Calendar, Integer>(c2, 11);
+        Pair<Calendar, Integer> pair4 =  new Pair<Calendar, Integer>(c2, 9);
+        Pair<Calendar, Integer> pair5 =  new Pair<Calendar, Integer>(c3, 11);
+        assertTrue(pair1.compareTo(pair2) == 0);
+        assertTrue(pair2.compareTo(pair1) == 0);
+        assertTrue(pair1.compareTo(pair3) == 0);
+        assertTrue(pair1.compareTo(pair4) > 0);
+        assertTrue(pair1.compareTo(pair5) < 0);
+    }
 }

@@ -40,12 +40,15 @@ public class PiGeneratorTest {
         assertEquals(answerToEqual, PiGenerator.powerMod(base, exponent, mod));
     }
     
+    /**
+     * This is the only test required, since the only dimention to test 
+     * computePiInHex is the precision, and 50 digits would cause an overflow in calculation
+     * if it was at risk 
+     */
     @Test
     public void computePiInHexTest() {
         assertArrayEquals(new int[]{2, 4, 3, 15, 6, 10, 8, 8, 8, 5, 10, 3, 0, 8, 13, 3, 1, 3, 1, 9, 8, 10, 2, 14, 0, 3, 7, 0, 7, 3, 4, 4, 10, 4, 0, 9, 3, 8, 2, 2, 2, 9, 9, 15, 3, 1, 13, 0, 0, 8}, PiGenerator.computePiInHex(50));
     }
     
-//    private void assertArraysEquals(int[] expected, int[] toTest){
-//        assertTrue(Arrays.equals(expected, toTest));
-//    }
+    
 }

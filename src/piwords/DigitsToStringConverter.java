@@ -1,7 +1,5 @@
 package piwords;
 
-import java.util.Map;
-
 public class DigitsToStringConverter {
     /**
      * Given a list of digits, a base, and a mapping of digits of that base to
