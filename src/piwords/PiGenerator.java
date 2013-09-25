@@ -32,17 +32,6 @@ public class PiGenerator {
      * @return a^b mod m
      */
     public static int powerMod(int a, int b, int m) {
-//        int base = a;
-//        int exponent = b;
-//        int result = 1;
-//        while(exponent > 0){
-//            if(exponent % 2 == 1){
-//                result = (result * base) % m;
-//            }
-//            base = (base ^ 2) % 2;
-//            exponent /= 2;
-//        }
-//        return result;
         long result = 1;
         for(int i = 0; i < b; i++){
             result = (result * a) % m;

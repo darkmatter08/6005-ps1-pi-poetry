@@ -30,33 +30,4 @@ public class BaseTranslatorTest {
         int[] emptyArray = {};
         assertArrayEquals(emptyArray, BaseTranslator.convertBase(emptyArray, 3, 3, 0));
     }
-
-//  Integer MAX_ARRAY_SIZE = Integer.MAX_VALUE - 2^12;
-//  int[] longArray = createRandomArray(100, 10);
-//  assertArrayEquals(longArray, BaseTranslator.convertBase(longArray, 10, 10, MAX_ARRAY_SIZE));
-    
-    
-//    /**
-//     * Method that removes the trailing zeroes from an array, to allow array comparisons
-//     */
-//    private int[] stripTrailingZeroes(final int[] input){
-//        int[] noTrailingZeroes = Arrays.copyOf(input, input.length);
-//        int indexOfEarliestTrailingZero = noTrailingZeroes.length - 1;
-//        for(int i = indexOfEarliestTrailingZero; i > 0; i --){
-//            if(noTrailingZeroes[indexOfEarliestTrailingZero] != 0){
-//                indexOfEarliestTrailingZero++;
-//                break;
-//            }
-//        }
-//        return noTrailingZeroes;
-//    }
-//    
-//    private int[] createRandomArray(int arraySize, int base){
-//        int[] result = new int[arraySize];
-//        Random generator = new Random();
-//        for(int i = 0; i < arraySize; i++){
-//            result[i] = generator.nextInt(base);
-//        }
-//        return result;
-//    }
 }
