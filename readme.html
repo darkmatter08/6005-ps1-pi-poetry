@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0044)http://web.mit.edu/6.005/www/fa13/psets/ps1/ -->
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  
+  <link rel="stylesheet" href="./readme_files/main.css" type="text/css">
+  <link href="./readme_files/prettify.css" type="text/css" rel="stylesheet">
+    <script type="text/javascript" src="./readme_files/prettify.js"></script>
+<title>PS1: Pi Poetry</title>
+</head><body onload="prettyPrint()">
+
+<div id="content">
+
+<table>
+<tbody><tr valign="bottom">
+<td>
+<h1>6.005 Software Construction<br>
+Problem Set 1: Pi Poetry<br>
+Beta Due: Tuesday, September 24, 2013, 10:00 PM <br>
+Code Reviews Due: Thursday, September 26, 2013, 10:00 PM<br>
+Final Due: Tuesday, October 1, 2013, 10:00 PM
+</h1>
+</td>
+</tr>
+</tbody></table>
+
+<p>The purpose of this problem set is to give you practice with test-first programming. Given a set of specifications, you will write unit tests that check for compliance with the specifications,
+and then implement code that meets the specifications.</p>
+
+<p>The problems are presented in a logical order, but you will receive credit for any parts of the problem set completed, even if you did not complete the prerequisites for that part. So, work ahead if you are stuck on any component of the problem set.</p>
+
+<p>This problem set will have you write tests for methods, then implement those methods. We will be grading both the tests you wrote and the methods themselves. We expect you to write a well-designed, compact test suite that covers the methods' behavior as defined in the specifications.  A good test suite will be small, but still sufficient to detect bad implementations and bugs.  A good test suite must always test only the behavior mandated by the spec; it should not complain about valid implementations that just happen to be different from your own.  Also keep in mind that a JUnit test suite that puts each test case in its own method is far more useful than one with a single large test method, since it pinpoints where the problem areas lie in the code under test.</p>
+
+<p>Most of the function specifications have preconditions, e.g. "this value must be positive" or "this array must be nonempty". When those preconditions are violated, the behavior of the method is <i>completely unspecified</i>. It may return a reasonable value, return an unreasonable value, throw an unchecked exception, display a picture of a cat, crash your computer, etc, etc, etc. In the tests you write, do not test methods with inputs that don't meet their preconditions. In the implementations you write, you may do whatever you like if a precondition is violated. Note that if the specification indicates a particular exception should be thrown for some class of invalid-looking inputs, that's <i>not</i> a precondition and you <i>do</i> need to implement/test that behavior.</p>
+
+<p>You may find <a href="http://www.wolframalpha.com/">Wolfram Alpha</a> useful as an "oracle" to determine what some of these functions should be producing, so you can test for correct behavior.</p>
+
+<p><b>Do not change the signatures or specifications of any methods, classes, or packages that we have provided you. Your code will be tested automatically, and will break our testing suite if you do so.  Similarly, do not write tests that diverge from the specifications.</b></p>
+
+<p>With the exception of problem 6 (implementing <code>Pair.compareTo()</code>), this problem set is designed so that it can be done with completely stateless functions, i.e., all the information you'll need to compute the result is included in the arguments passed to the function. All of the functions we have provided you to implement are therefore labeled <code>static</code>. You shouldn't need to introduce class variables or non-<code>static</code> functions in this problem set.</p>
+
+<p>To get started, pull the problem set code from git. As a reminder, your git repository for this problem set can be found at <code>/afs/athena.mit.edu/course/6/6.005/git/fa13/psets/ps1/<em>[your athena name]</em>.git</code>. If you need a refresher on how to do this, see <a href="http://web.mit.edu/6.005/www/fa13/psets/ps0/">Problem Set 0</a>.</p>
+
+<h2>Overview</h2>
+
+<p>The theme of this project is to find English words in the digits of Pi. To do this, we'll:</p>
+
+<ol>
+  <li>Compute the digits of Pi</li>
+  <li>Convert the digits of Pi into a numeric base more suitable for word-finding — i.e., base 26.</li>
+  <li>Transform the digits of Pi into an alphabetic String of letters</li>
+  <li>Find words in that particular encoding of Pi</li>
+</ol>
+
+<p>After the basic version of the code works, we'll work on improving it to get better word coverage, changing the
+mapping of digits to letters so that you're more likely to find interesting words.</p>
+
+<p>This problem set is designed to acquaint you with the notion of test-first programming, so your workflow for each part of this problem set should be (<emph>in this order</emph>):</p>
+
+<ol>
+  <li>Carefully look at the specification of the method you are looking to implement.</li>
+  <li>Write a battery of tests to test the method you are about to write.  Include a comment in each test suite class, describing your testing strategy (how you chose test cases).  Remember that we will grade your test cases by running them against correct and incorrect implementations.  Your tests should be robust; consider all the potential ways an implementation might inadvertently fail to precisely adhere to the specifications, and try to choose tests that will expose discrepancies. Your tests should not require unreasonable amounts of resources (such as MAX_INT size arrays).</li>
+  <li>Write the actual method we specified.</li>
+</ol>
+
+<h2>Problem 1: Pi Generation</h2>
+
+<p>In this part of the problem set, we will generate an arbitrary number of digits of Pi, so we have data to search through. We will be implementing the <a href="http://en.wikipedia.org/wiki/Bailey%E2%80%93Borwein%E2%80%93Plouffe_formula">Bailey–Borwein–Plouffe formula</a>. Because this algorithm lets us generate arbitrary digits of Pi, it is much easier to test than other Pi generation methods.</p>
+
+<p>Note that the BBP algorithm returns digits of Pi in base 16, which computer scientists will typically refer to as hexadecimal (or hex). Hex is usually expressed using 0-9 and A-F to represent digits, with A = 10, B = 11, ..., F = 15. You'll see that terminology used in the problem set. Your code won't care about this convention (it's keeping track of each digit separately), but it provides a useful way for us to talk about numbers in hex.</p>
+
+<p>We have provided you with almost all of the implementation of the algorithm, the bulk of which can be found in <code>PiGenerator.java</code>. The implementation was ported from the integer version of the Python code located <a href="http://en.literateprograms.org/Pi_with_the_BBP_formula_(Python)">here</a>. You can read the explanation at that link to get a sense for the spirit of the implementation we have provided you.</p>
+
+<p>For this part of the problem, you'll have to test and implement the missing functions <code>computePiInHex()</code> and <code>powerMod()</code> in PiGenerator. Assume that the implementation of <code>piTerm()</code> and <code>piDigit()</code> we've provided you are correct.</p>
+
+<p><b>a.</b> Devise test cases for <code>powerMod()</code>, document your testing strategy in <code>PiGeneratorTest.java</code>, and implement your test cases in <code>PiGeneratorTest</code>. One test has been added for you already.</p>
+
+<p><b>b.</b> Implement <code>powerMod()</code> in <code>PiGenerator</code>. Instead of using a library function to compute exponentiation, you should use the method of <a href="http://en.wikipedia.org/wiki/Exponentiation_by_squaring">exponentiation by squaring</a>. This will allow you to compute very large exponents quickly and without sacrificing precision.</p>
+
+<p><b>Time check.</b> It is essential that your <code>powerMod()</code> function runs quickly even for large exponents, as it becomes a bottleneck in generating digits of Pi. If you have implemented it correctly, this should not be a problem. <code>Main.java</code> does a sample large exponentiation at the beginning of the program; if it takes any significant time at all, take another look at the description of exponentiation by squaring on Wikipedia and reconsider the algorithm you're using. Otherwise, your code may take too long to run for us to grade it properly.</p>
+
+<p><b>Hint.</b> Make sure not to cause an integer overflow. If an int exceeds maximum value it will result in incorrect behavior.
+
+</p><p><b>c.</b> Devise, document, and implement tests for <code>computePiInHex()</code> and place them in <code>PiGeneratorTest</code>. You can find the first part of the hexadecimal expansion of Pi <a href="http://www.numberworld.org/digits/Pi/">here</a>, if you want to use it as a reference for your test cases.</p>
+
+<p><b>d.</b> Implement <code>computePiInHex()</code> in <code>PiGenerator</code>. Note that this function should only return the fractional digits of Pi, and not the leading 3.</p>
+
+<p>Executing <code>Main.java</code> now should print some of the hexadecimal digits of Pi. You should verify that the output is what you expect. You can modify <code>PI_PRECISION</code> at the top of the file to change how many digits of Pi to generate; generating less digits will be faster.</p>
+
+<p><b>Commit to git.</b> Once you're happy with your solution to this problem, commit your code!  
+Committing frequently -- whenever you've fixed a bug or added a working and tested feature -- is a good way to use version control, 
+and will be a good habit to have for your team projects.</p>
+
+
+<h2>Problem 2: Transforming Pi to Another Base</h2>
+
+<p>In order to find words in the digits of Pi, we'll first need to convert the hex digits of Pi into something more useful. As a first try, we'll convert the hex digits into base 26, then do the straightforward mapping of numbers to letters (A=0, B=1, ..., Z=25). This part of the problem set will implement <code>BaseTranslator.convertBase()</code>, a generic method for re-expressing the fractional part of a number in a different base. The fractional part can range in value from 0 to 1, including 0 but excluding 1.</p>
+
+<p><b>a.</b> Devise, document, and implement test cases for <code>convertBase()</code>. Remember to check boundary conditions, and remember to that your test cases must comply with the behavior described in the specification.</p>
+
+<p><b>b.</b> Implement <code>convertBase()</code>, verifying that the tests you've written for it pass.</p>
+
+<p>The <code>digits</code> argument to <code>convertBase()</code> is the fractional part of a number expressed in <code>baseA</code> with the most significant digit first. The output is the same number expressed in <code>baseB</code> with the most significant digit first.</p>
+
+<p><i>Implementation Hint 1:</i> Logically, you're repeatedly multiplying the number by <code>baseB</code>, taking the integer part at each iteration as an output digit. Do that <code>precisionB</code> times and you're done. Think about why this works. (A concrete example: If you determine that when you multiply 0.4A25 (base 16) by 10, you get 2.E572, and when you multiply 0.E572 by 10 again, you get 8.F674, you know that when you write 0.4A25 in base 10, it starts with 0.28.)</p>
+
+<p><i>Implementation Hint 2:</i> Confused about how to multiply by <code>baseB</code>? Try something like this (pseudocode):</p>
+
+<pre>// assumes the digits of the fractional part to be multiplied by baseB
+// are in the working_digits[] array
+carry = 0
+for i from working_digits.length - 1 to 0:
+  x = (baseB * working_digits[i]) + carry
+  working_digits[i] = x % baseA
+  carry = x / baseA
+// after the loop, we've computed (0.working_digits * baseB), with the
+// integer part in carry and the fractional part in working_digits
+</pre>
+
+<p>Executing <code>Main.java</code> should print the base-26 digits of Pi. Verify that the numbers are what you expect.</p>
+
+<h2>Problem 3: Converting Pi to Characters</h2>
+
+<p>Now that we have Pi in base 26, it is a straightforward task to convert it to a string of letters. This part of the problem set will implement <code>DigitsToStringConverter.convertDigitsToString()</code>.</p>
+
+<p><b>a.</b> Devise, document, and implement tests for <code>convertDigitsToString()</code>.</p>
+
+<p><b>b.</b> Implement <code>convertDigitsToString()</code>.</p>
+
+<p>Executing Main.java should print the translation of base-26 Pi into a-z characters.</p>
+
+<h2>Problem 4: Finding Words</h2>
+
+<p>Now that we have an alphanumeric string, we want to find words in it using <code>WordFinder.findWords()</code>.</p>
+
+<p><b>a.</b> Devise, document, and implement test cases for <code>findWords()</code>.</p>
+
+<p><b>b.</b> Implement <code>findWords()</code>, verifying that it conforms to the listed specification, and that all of your tests pass.</p>
+
+<p>Executing <code>Main.java</code> now will search in Pi for words from the word list included in the assignment. It should show you the number of words found, fraction of the wordlist represented, and print the first few words; if you want to see more, increase <code>WORDS_TO_PRINT</code> at the top of <code>Main.java</code>.
+
+</p><h2>Problem 5: Alphabet Generation Revisited</h2>
+<p>As you can see, we don't do very well with finding most words in the digits of Pi. Part of the reason is that the letters occur far more uniformly in Pi than they do in English; "z"s occur with roughly the same frequency as "e"s. This problem will explore one way to fix that issue.</p>
+
+<p>We've included a text file with the relative frequencies of each letter found in the word list. The file is read in <code>Main</code> and passed into <code>AlphabetGenerator</code>.</p>
+
+<p><b>a.</b> Devise, document, and implement tests for <code>generateAlphabet()</code>.</p>
+
+<p><b>b.</b> Implement <code>generateAlphabet()</code>. The <code>Pair</code> type passed to this function is a simple class that we have mostly implemented for you; you will finish implementing it in problem 6 by adding comparison functionality.</p>
+
+<p>Executing <code>Main.java</code> now should show a count, coverage, and the first few words that were found in the digits of Pi using the alternative alphabet. The coverage you should get for this implementation should be higher than in the basic one. (Again, if you want to see more words, change <code>WORDS_TO_PRINT</code>.)
+
+</p><h2>Problem 6: The Pi Code</h2>
+<p>Somewhere in the world, someone believes the answer to life, the universe and everything is encoded into the number Pi. (Fans of Douglas Adams will note that in base 10, this occurs 92 places after the decimal point.) Let's look for messages in Pi! Since we're able to find the words in Pi, we just need to sort the results now to find which words occur first. The Main class use <code>Collections.sort()</code> to sort the (<code>String</code>, <code>Integer</code>) pairs created from the results of findWords, but in order to use <code>Collections.sort()</code>, we need to implement the <code>compareTo()</code> method in <code>Pair</code>.  </p>
+
+<p>Note that Pairs are <i>generic</i>, meaning that they are designed to hold any pair of types X and Y, not just the <code>String</code> and <code>Integer</code> types that we're using in this problem set.  You should implement the <code>compareTo()</code> method generically as well.  You can't assume that X and Y are <code>Integer</code> and <code>String</code>.  But you <i>can</i> assume that X and Y each have a <code>compareTo()</code> method.</p>
+
+<p><b>a.</b> Devise, document, and implement tests for <code>compareTo()</code> in <code>PairTest</code>. </p>
+
+<p><b>b.</b> Implement <code>compareTo()</code>. </p>
+
+<p>Executing <code>Main.java</code> now should show the first 10 words (or less) found in Pi. </p>
+
+<h2>Before You're Done...</h2>
+
+<p>Double check that you didn't change the signatures of any of the code we gave you.</p>
+<p>Make sure the code you implemented doesn't print anything to <code>System.out</code>. It's a helpful debugging feature, but writing output in a method is a definite side effect, and none of the methods we gave you to write should have any side effects.</p>
+<p>Make sure you don't have any outdated comments in the code you turn in. In particular, get rid of blocks of code that you may have commented out when doing the pset, and get rid of any TODO comments that are no longer TODOs.</p>
+<p>Make sure your code compiles, and all the methods you've implemented pass all the tests that you added.</p>
+<p>Does your code compile without warnings? In particular, you should have no unused variables, and no unneeded imports.</p>
+<p>Make sure you push the last version of your code into your git repository, and that Didit shows a successful compilation and passed tests.</p>
+
+
+</div>
+
+
+</body></html>
